@@ -1,0 +1,38 @@
+﻿<Project Sdk="Microsoft.NET.Sdk" DefaultTargets="BeforeBuild" InitialTargets="First">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="NewFolder\**" />
+    <EmbeddedResource Remove="NewFolder\**" />
+    <None Remove="NewFolder\**" />
+  </ItemGroup>
+  <Target Name="Build">
+    <Message Text="BUILD" />
+  </Target>
+  <Target Name="BeforeBuild">
+    <Message Text="BEFORE BUILD" Importance="high" />
+  </Target>
+<Target Name="First">
+    <Message Text="INITIAL" Importance="high" />
+    <Csc sources="@(Compile)" targettype="library" />
+  </Target>
+  
+  <Target Name="AfterBuild">
+    <Message Text="AFTER_BUILD" Importance="high" />
+  </Target>
+   
+
+<PropertyGroup Condition="'$(Configuration)'=='Release'">
+  <PostBuildEvent>
+    echo POST_BUILD
+  </PostBuildEvent>
+</PropertyGroup>
+</Project> 
