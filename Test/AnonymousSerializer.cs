@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using EDIFACT.Serialize;
 
 namespace Test.Serializer
 {
@@ -28,7 +29,7 @@ namespace Test.Serializer
                 MessageIdentifier = new[] { "DESADV", "D", "96A", "UN", "EAN006" }
             };
 
-            string s1 = EDIFACT.EdiObject.SerializeObject(o);
+            string s1 = EdiObject.SerializeObject(o);
             string s2 = EdiObject.SerializeObject(o2);
 
             Assert.AreEqual(fact, s1);
