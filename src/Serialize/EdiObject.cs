@@ -20,7 +20,9 @@ namespace EDIFACT.Serialize
 
             var props = anonType.GetProperties();
 
-            string tag = anonType.GetProperty("Tag")?.GetValue(o).ToString() ?? props.First().GetValue(o).ToString();
+            string tag = anonType.GetProperty("Tag") != null ? anonType.GetProperty("Tag")?.GetValue(o).ToString() 
+                : props.Count() > 0 ? props.FirstOrDefault()?.GetValue(o).ToString() 
+                : throw new ArgumentException("Can't infer Tag property");
 
             List<string> elements = new List<string>();
 
@@ -28,10 +30,15 @@ namespace EDIFACT.Serialize
             {
                 object val = prop.GetValue(o);
 
-                if (val is string s) {
+
+                if (val is string s)
+                {
                     if (s == tag) continue;
-                    elements.Add(s); }
+                    else if (string.IsNullOrWhiteSpace(s)) elements.Add("");
+                    else elements.Add(s);
+                }
                 else if (val is Array) elements.Add(SerializeComposite(val));
+                else if (val == null) elements.Add("");
                 else elements.Add(val.ToString());
 
             }

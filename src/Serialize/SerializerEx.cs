@@ -23,5 +23,10 @@ namespace EDIFACT.Serialize
 
             
         }
+
+        public static void Add(this List<dynamic> list, dynamic o)
+        {
+
+        }
     }
 }
