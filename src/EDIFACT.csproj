@@ -10,11 +10,6 @@
     <OutputPath>bin\Debug\</OutputPath>
   </PropertyGroup>
 
-
-  <ItemGroup>
-    <Folder Include="Helpers\" />
-  </ItemGroup>
-
  
   <Target Name="Build">
     <Message Text="BUILD" Importance="high" />
