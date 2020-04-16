@@ -4,14 +4,11 @@ using System.Text;
 
 namespace EDIFACT.Segments
 {
-
-    public class LIN : DynamicSegment
+    public class GlobalProperties
     {
-        public LIN():base("LIN")
+        public GlobalProperties()
         {
 
-        }
-
-
+        }        
     }
 }

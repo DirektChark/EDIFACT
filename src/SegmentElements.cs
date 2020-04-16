@@ -25,18 +25,6 @@ namespace EDIFACT
         }
     }
 
-    [EdiSegment("DTM")]
-    public class DTM
-    {
-        [DataElement("DTM/0/0")]
-        public string DateTimeQualifier { get; set; }
-
-        [DataElement("DTM/0/1",Format = "yyyyMMdd")]
-        public DateTime DateTime { get; set; }
-
-        [DataElement("DTM/0/2")]
-        public string FormatQualifier { get; set; }
-    }
 
     [EdiSegment("RFF")]
     public class RFF

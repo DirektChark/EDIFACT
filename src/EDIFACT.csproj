@@ -37,4 +37,9 @@
 <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
   <OutputPath>bin\Release\</OutputPath>
 </PropertyGroup>
+   
+
+<ItemGroup>
+  <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+</ItemGroup>
 </Project> 

@@ -1,10 +1,11 @@
 ﻿using System;
+using EDIFACT.Segments;
 
 namespace EDIFACT.Helpers
 {
     public class Interchange
     {
-        public static string GetUNA(
+        public static DynamicSegment GetUNA(
             string ComponentDataElementSeparator,
             string DataElementSeparator,
             string DecimalNotation,
@@ -12,15 +13,19 @@ namespace EDIFACT.Helpers
             string ReservedForFutureUse,
             string SegmentTerminator)
         {
-            return string.Format("UNA{0}{1}{2}{3}{4}{5}", ComponentDataElementSeparator,
+
+            var una = DynamicSegment.SetUNA(ComponentDataElementSeparator,
                 DataElementSeparator,
                 DecimalNotation,
                 ReleaseIndicator,
                 ReservedForFutureUse,
                 SegmentTerminator);
+            
+            return una;
+           
         }
 
-        public static string GetUNB(
+        public static DynamicSegment GetUNB(
             string SyntaxIdentifier,
             int SyntaxVersionNumber,
             string SenderIdentification,
@@ -49,10 +54,10 @@ namespace EDIFACT.Helpers
                 .AddElement(AcknowledegementRequest)
                 .AddElement(CommunicationsAgreementID)
                 .AddElement(TestIndicator)
-                .ToString();
+                ;
         }
 
-        public static string GetUNH(
+        public static DynamicSegment GetUNH(
             string MessageReferenceNumber,
             string MessageTypeIdentifier,
             string MessageTypeVersionNumber,
@@ -67,7 +72,7 @@ namespace EDIFACT.Helpers
                     MessageTypeReleaseNumber,
                     ControllingAgency,
                     AssociationAssignedCode)
-                .ToString();
+                ;
         }
     }
 }

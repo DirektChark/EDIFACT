@@ -96,11 +96,61 @@ namespace EDIFACT.Segments
             System.Threading.Thread.CurrentThread.CurrentCulture = System.Globalization.CultureInfo.InvariantCulture;
             return Helpers.SegmentHelpers.TrimSegment(Expression.Lambda<Func<string>>(body).Compile().Invoke() +"'");
         }
+        
 
         public DynamicSegment AddElements(params object[] args)
         {
             foreach (object arg in args) AddElement(arg);
             return this;
+        }
+
+        internal static DynamicSegment SetUNA(string componentDataElementSeparator, string dataElementSeparator, string decimalNotation, string releaseIndicator, string reservedForFutureUse, string segmentTerminator)
+        {
+            var una = new UNA(componentDataElementSeparator,
+               dataElementSeparator,
+               decimalNotation,
+               releaseIndicator,
+               reservedForFutureUse,
+               segmentTerminator);
+
+            return una;
+        }
+
+
+        class UNA : DynamicSegment
+        {
+            private string componentDataElementSeparator;
+            private string dataElementSeparator;
+            private string decimalNotation;
+            private string releaseIndicator;
+            private string reservedForFutureUse;
+            private string segmentTerminator;
+
+            public UNA(string componentDataElementSeparator, 
+                string dataElementSeparator, 
+                string decimalNotation, 
+                string releaseIndicator, 
+                string reservedForFutureUse, 
+                string segmentTerminator) 
+                : base("UNA")
+            {
+                this.componentDataElementSeparator = componentDataElementSeparator;
+                this.dataElementSeparator = dataElementSeparator;
+                this.decimalNotation = decimalNotation;
+                this.releaseIndicator = releaseIndicator;
+                this.reservedForFutureUse = reservedForFutureUse;
+                this.segmentTerminator = segmentTerminator;
+            }
+
+            public override string ToString()
+            {
+                return string.Format("UNA{0}{1}{2}{3}{4}{5}", componentDataElementSeparator,
+               dataElementSeparator,
+               decimalNotation,
+               releaseIndicator,
+               reservedForFutureUse,
+               segmentTerminator);
+            }
         }
     }
 }

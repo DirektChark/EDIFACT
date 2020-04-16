@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
-
+using System.Dynamic;
 
 namespace EDIFACT.Serialize
 {
@@ -51,5 +51,7 @@ namespace EDIFACT.Serialize
             IEnumerable<object> subelements = val as IEnumerable<object>;
             return string.Join(":", subelements.Select(x => x?.ToString() ?? ""));
         }
+
+
     }
 }

@@ -41,7 +41,7 @@ namespace Test.ESAP20.DESADV
             header.LevAviNummer.MessageFunction = "9";
             //header.LevAviDatum = DateTime.Parse("2018-04-01");
 
-
+            /*
 
 
             /// DTM 11
@@ -155,6 +155,8 @@ namespace Test.ESAP20.DESADV
             {
                 logisticInfo
             };
+
+    */
         }
     }
 }
