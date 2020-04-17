@@ -11,15 +11,15 @@ namespace EDIFACT.ESAP20
     {
         public static Dictionary<string, object> Defaults { get; } = new Dictionary<string, object>();
 
-        public static void AddUNA(this EDIFACT.SegmentGroup doc, object obj) { }
-        public static void AddUNB(this EDIFACT.SegmentGroup doc, object obj) { }
-        public static void AddUNH(this EDIFACT.SegmentGroup doc, object obj) { }
+        public static void AddUNA(this EDIFACT.SegmentCollection doc, object obj) { }
+        public static void AddUNB(this EDIFACT.SegmentCollection doc, object obj) { }
+        public static void AddUNH(this EDIFACT.SegmentCollection doc, object obj) { }
 
-        public static void AddBGM(this EDIFACT.SegmentGroup doc) { }
+        public static void AddBGM(this EDIFACT.SegmentCollection doc) { }
 
 
 
-        public static LIN AddLIN(this SegmentGroup doc)
+        public static LIN AddLIN(this SegmentCollection doc)
         {
             var l = new LIN();
             doc.Add(l);

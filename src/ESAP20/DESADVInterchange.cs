@@ -4,7 +4,7 @@ using System.Text;
 
 namespace EDIFACT.ESAP20
 {
-    public class DESADVInterchange : EDIInterchange
+    public class DESADVInterchange : EDIDocument
     {
         public IEnumerable<object> LogisticInformation { get; set; }
     }

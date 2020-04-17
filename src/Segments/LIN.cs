@@ -5,7 +5,7 @@ using System.Text;
 namespace EDIFACT.Segments
 {
 
-    public class LIN : DynamicSegment
+    public class LIN : Segment
     {
         public LIN():base("LIN")
         {

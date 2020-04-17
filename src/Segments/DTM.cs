@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 
 namespace EDIFACT.Segments
 {
-    public class DTM : DynamicSegment
+    public class DTM : Segment
     {
         private string dateFormat = "yyyyMMdd";
 

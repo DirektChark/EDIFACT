@@ -8,7 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace Test.Serializer
+namespace Edifact_Test
 {
     public class Serializing
     {
@@ -17,12 +17,21 @@ namespace Test.Serializer
         [Test]
         public void DynamicSegmentToSTring()
         {
-            var ds = new DynamicSegment("TEST").AddElement("D");
+            var ds = new Segment("TEST").AddElement("D");
             Assert.AreEqual("TEST+D'", ds.ToString());
         }
 
        
+       [Test]
+       [TestCase("QTY+12:50'", ExpectedResult =50.0)]
+       [TestCase("QTY+12:50.134:KGM'", ExpectedResult = 50.134)]
+       public decimal ExtractQty(string segment)
+        {
+            Moq.Mock<Segment> mock = new Moq.Mock<Segment>();
+            mock.Setup(s => s.ToString()).Returns(segment);
 
+            return EDIFACT.Helpers.SegmentHelpers.GetQtyValue(mock.Object);
+        }
        
 
        
@@ -30,8 +39,8 @@ namespace Test.Serializer
         [Test]
         public void DynamicSegmentToSTringWhenEnumerating()
         {
-            List<DynamicSegment> list = new List<DynamicSegment>();
-            var ds = new DynamicSegment("TEST").AddElement("D");
+            List<Segment> list = new List<Segment>();
+            var ds = new Segment("TEST").AddElement("D");
             list.Add(ds);
 
             Assert.AreEqual("TEST+D'", list.First().ToString());
@@ -40,8 +49,8 @@ namespace Test.Serializer
         [Test]
         public void DynamicSegmentLinqCast()
         {
-            List<DynamicSegment> list = new List<DynamicSegment>();
-            var ds = new DynamicSegment("TEST").AddElement("D");
+            List<Segment> list = new List<Segment>();
+            var ds = new Segment("TEST").AddElement("D");
             list.Add(ds);
             var list2 = list.Select(x => x.ToString());
             Assert.AreEqual("TEST+D'", list2.First());
