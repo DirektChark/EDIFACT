@@ -9,7 +9,7 @@ namespace EDIFACT.ESAP20
 {
     public static class ESAP20TermMapper
     {
-        public static Dictionary<string, object> Defaults { get; } = new Dictionary<string, object>();
+        public static TermDictionary Defaults { get; } = new TermDictionary();
 
         public static void AddUNA(this EDIFACT.SegmentCollection doc, object obj) { }
         public static void AddUNB(this EDIFACT.SegmentCollection doc, object obj) { }
@@ -68,6 +68,19 @@ namespace EDIFACT.ESAP20
             }
 
             return list;
+        }
+
+
+        public class TermDictionary
+        {
+             Dictionary<string, object> terms = new Dictionary<string, object>();
+
+            public object this[string term] { get => terms[term]; set => terms[term] = value; }
+
+            public bool TryGetValue(string term, out object obj)
+            {
+                return terms.TryGetValue(term, out obj);
+            }
         }
     }
 }

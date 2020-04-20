@@ -69,18 +69,21 @@ namespace EDIFACT.Segments
 
         }
 
+        public Segment AddElement(object data, bool allowNull = false)
+        {
+            if (allowNull && data == null) data = DataNull.Value;
+            return AddElement(Expression.Constant(""));
+        }
+
         public Segment AddElement(object s)
         {
-            /*
-            var c = Expression.Constant(s);
-            MethodInfo m = typeof(string).GetMethod("Concat", new Type[] { typeof(Expression), typeof(string), typeof(string) });
-            body = Expression.Call(null, m, body, segmentSeparator, c);
-            */
+            if (s == null) throw new ArgumentNullException(nameof(s));
+            if (s == DataNull.Value) s = "";
             return AddElement(Expression.Constant(s,typeof(Object)));
         }
 
         public virtual Segment AddElement(Expression expr)
-        {            
+        {
             MethodInfo m = typeof(string).GetMethod("Concat", new Type[] { typeof(Expression), typeof(string), typeof(string) });
             body = Expression.Call(null, m, body, segmentSeparator, expr);
 
@@ -95,10 +98,18 @@ namespace EDIFACT.Segments
         public virtual Segment AddComposite(params object[] obj)
         {
             
-            while(obj.Length > 0 && obj[obj.Length -1] == null)
+            while(obj.Length > 0 && obj[obj.Length -1] == DataNull.Value)
             {
                 obj = obj.Take(obj.Length - 1).ToArray();
             }
+
+            for (int i = 0; i < obj.Length; i++)
+            {
+                if (obj[i] == null)
+                    throw new ArgumentNullException(nameof(obj), "Can't have null arguments. Use DataNull intead");
+                else if (obj[i] == DataNull.Value) obj[i] = "";
+            }
+
             if (obj.Length == 0) return AddElement();
             
             var arr = Expression.Constant(obj, typeof(object[]));

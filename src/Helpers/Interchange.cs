@@ -48,12 +48,12 @@ namespace EDIFACT.Helpers
                 .AddComposite(RecepientIdentification, RecipientIdentificationQualifier)
                 .AddComposite(PreparationTimestamp.ToString("yyMMdd"), PreparationTimestamp.ToString("hhmm"))
                 .AddElement(InterchangeControlReference)
-                .AddElement(RecipientReference)
-                .AddElement(ApplicationReference)
-                .AddElement(ProcessingPriorityCode)
-                .AddElement(AcknowledegementRequest)
-                .AddElement(CommunicationsAgreementID)
-                .AddElement(TestIndicator)
+                .AddElement(RecipientReference, allowNull: true)
+                .AddElement(ApplicationReference, allowNull: true)
+                .AddElement((object)ProcessingPriorityCode ?? DataNull.Value)
+                .AddElement((object)AcknowledegementRequest ?? DataNull.Value)
+                .AddElement((object)CommunicationsAgreementID ?? DataNull.Value)
+                .AddElement(TestIndicator.HasValue ? (object)TestIndicator.Value : DataNull.Value)
                 ;
         }
 

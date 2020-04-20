@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace EDIFACT
 {
@@ -90,6 +91,13 @@ namespace EDIFACT
             AssociationAssignedCode);
 
             this.AddSegments(sg);
+        }
+
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (var seg in this) sb.AppendLine(seg.ToString());
+            return sb.ToString();
         }
     }
 }
