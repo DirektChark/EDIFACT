@@ -1,11 +1,10 @@
-﻿using System;
+﻿using EDIFACT.Segments;
+using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 
 namespace EDIFACT.ESAP20
 {
-    public class DESADVInterchange : EDIDocument
-    {
-        public IEnumerable<object> LogisticInformation { get; set; }
-    }
+
 }

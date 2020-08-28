@@ -21,7 +21,7 @@ namespace Edifact_Test
             Assert.AreEqual("TEST+D'", ds.ToString());
         }
 
-       
+       [Ignore("Not implemented")]
        [Test]
        [TestCase("QTY+12:50'", ExpectedResult =50.0)]
        [TestCase("QTY+12:50.134:KGM'", ExpectedResult = 50.134)]

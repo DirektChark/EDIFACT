@@ -42,7 +42,14 @@ namespace EDIFACT.Helpers
             int? TestIndicator = null
             )
         {
-            return new Segments.Segment("UNB")
+            if (string.IsNullOrWhiteSpace(SenderIdentification)) throw new ArgumentNullException(nameof(SenderIdentification));
+            if (string.IsNullOrWhiteSpace(RecepientIdentification)) throw new ArgumentNullException(nameof(RecepientIdentification));
+            if (string.IsNullOrWhiteSpace(InterchangeControlReference)) throw new ArgumentNullException(nameof(InterchangeControlReference));
+            //if (string.IsNullOrWhiteSpace(RecipientReference)) throw new ArgumentNullException(nameof(RecipientReference));
+            
+
+
+            return new Segment("UNB")
                 .AddComposite(SyntaxIdentifier, SyntaxVersionNumber)
                 .AddComposite(SenderIdentification, SenderIdentificationQualifier)
                 .AddComposite(RecepientIdentification, RecipientIdentificationQualifier)
@@ -65,7 +72,11 @@ namespace EDIFACT.Helpers
             string ControllingAgency,
             string AssociationAssignedCode)
         {
-            return new Segments.Segment("UNH")
+            if (string.IsNullOrWhiteSpace(MessageReferenceNumber)) throw new ArgumentNullException(nameof(MessageReferenceNumber));
+
+
+
+            return new Segment("UNH")
                 .AddElement(MessageReferenceNumber)
                 .AddComposite(MessageTypeIdentifier,
                     MessageTypeVersionNumber,
@@ -75,72 +86,51 @@ namespace EDIFACT.Helpers
                 ;
         }
 
-        public static SegmentCollection GetInterchangeHeader(string SenderGLN,
-            string RecipientGLN,
-            DateTime PreparationTime,
-            string InterchangeControlReference,
-            string MessageReferenceNumber,
-            string MessageTypeIdentifier,
-                string MessageTypeVersionNumber,
-                string MessageTypeReleaseNumber,
-                string ControllingAgency,
-                string AssociationAssignedCode)
+
+        public static SegmentCollection AddControlElements()
         {
-            bool acknowledgementRequest = false;
-
-            Segment una = EDIFACT.Helpers.Interchange.GetUNA(":", "+", ".", "?", " ", "'");
-
-            Segment unb = EDIFACT.Helpers.Interchange.GetUNB("UNOC", 3, SenderGLN, "14",
-                RecipientGLN, "14", PreparationTime,
-                InterchangeControlReference,
-                null,
-                null,
-                null,
-                acknowledgementRequest ? 1 : (Nullable<int>)null,
-                null,
-                null);
-
-            Segment unh = EDIFACT.Helpers.Interchange.GetUNH(
-                MessageReferenceNumber,
-                MessageTypeIdentifier,
-                MessageTypeVersionNumber,
-                MessageTypeReleaseNumber,
-                ControllingAgency,
-                AssociationAssignedCode);
-
-            return new SegmentCollection { una, unb, unh };
+            throw new NotImplementedException();
         }
 
-
-        public static SegmentCollection GetInterchangeFooter(
-            decimal ControlQuantity, 
-            int LineCount, 
-            int SegmentCount, 
-            string MessageReferenceNumber,
-            int InterchangeControlCount, 
-            string InterchangeControlReference
+        public static SegmentCollection GetMessageTrailer(
+            decimal ControlQuantity,
+            int LineCount
             )
         {
-            
-            if (MessageReferenceNumber == null) throw new ArgumentNullException(nameof(MessageReferenceNumber));
-            if (InterchangeControlReference == null) throw new ArgumentNullException(nameof(InterchangeControlReference));
-
             var cnt1 = new Segment("CNT")
                 .AddComposite(1, ControlQuantity);
 
             var cnt2 = new Segment("CNT")
                 .AddComposite(2, LineCount);
+            return new SegmentCollection { cnt1, cnt2 };
+        }
 
-            var unt = new Segment("UNT")
+        public static Segment GetUNT(int SegmentCount, string MessageReferenceNumber)
+        {
+            if (string.IsNullOrWhiteSpace(MessageReferenceNumber)) throw new ArgumentNullException(nameof(MessageReferenceNumber));
+
+            return new Segment("UNT")
                 .AddElement(SegmentCount)
                 .AddElement(MessageReferenceNumber);
+        }
+
+
+        public static SegmentCollection GetInterchangeFooter(
+            
+            
+            int InterchangeControlCount, 
+            string InterchangeControlReference
+            )
+        {
+            if (InterchangeControlReference == null) throw new ArgumentNullException(nameof(InterchangeControlReference));
 
             var unz = new Segment("UNZ")
                 .AddElement(InterchangeControlCount)
                 .AddElement(InterchangeControlReference);
 
-            return new SegmentCollection { cnt1, cnt2, unt, unz };
-
+            return new SegmentCollection { unz };
         }
+
+        public static Segment DefaultServiceStringAdvice => GetUNA(":", "+", ".", "?", " ", "'");
     }
 }

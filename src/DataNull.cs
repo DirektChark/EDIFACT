@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace EDIFACT.Segments
+namespace EDIFACT
 {
     public class DataNull
     {

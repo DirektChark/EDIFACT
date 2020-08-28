@@ -1,4 +1,5 @@
-﻿using EDIFACT.Segments;
+﻿using EDIFACT;
+using EDIFACT.Segments;
 using NUnit.Framework;
 using System;
 
@@ -141,7 +142,7 @@ namespace Edifact_Test
         {
             var cps = new DTM()
                 .WithDateformat("yyyyMMdd")
-                .AddComposite(361, null, 102);
+                .AddComposite(361, DataNull.Value, 102);
             Assert.AreEqual("DTM+361::102'", cps.ToString());
         }
 
@@ -227,7 +228,7 @@ namespace Edifact_Test
         {
             var cps = new Segment("NAD")
                 .AddElement("DEQ")
-                .AddComposite("7300015200024", null, 9);
+                .AddComposite("7300015200024", DataNull.Value, 9);
             Assert.AreEqual("NAD+DEQ+7300015200024::9'", cps.ToString());
         }
 

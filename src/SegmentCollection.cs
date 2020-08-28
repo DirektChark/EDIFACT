@@ -31,9 +31,9 @@ namespace EDIFACT
         }
 
 
-        public Segments.Segment AddSegment(string tag)
+        public Segment AddSegment(string tag)
         {
-            var s = new Segments.Segment(tag);
+            var s = new Segment(tag);
             segments.Add(s);
             return s;
         }

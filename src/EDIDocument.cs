@@ -6,98 +6,93 @@ using System.Text;
 
 namespace EDIFACT
 {
-    public class EDIDocument : SegmentCollection
+    public class EDIDocument
     {
+        public Segment ServiceStringAdvice { get; set; } //UNA
+
+        private Segment UNB;
+        protected Segment UNH;
+        protected List<EDIMessage> Messages;
+        protected Segment UNT;
+        private Segment UNZ;
+
+        
+
         string SenderGLN;
         string RecipientGLN;
         DateTime PreparationTime;
         string InterchangeControlReference;
-        string MessageReferenceNumber;
-        string MessageTypeIdentifier;
-        string MessageTypeVersionNumber;
-        string MessageTypeReleaseNumber;
-        string ControllingAgency;
-        string AssociationAssignedCode;
 
-        /*
-        public void AddSegments(SegmentCollection segmentGroup)
+        //public abstract IEnumerable<EDIMessage> GetMessages();
+
+        public EDIDocument()
         {
-            AddSegments((IEnumerable<Segment>)segmentGroup);
-        }*/
-
-
-
-        public SegmentCollection AppendControlSegment()
-        {
-
-            decimal ControlQuantity = segments.Where(s => s.Tag == "QTY").Sum(qty => Helpers.SegmentHelpers.GetQtyValue(qty));
-            int LineCount = this.segments.Where(s => s.Tag == "LIN").Count();
-            int SegmentCount = this.segments.Count;
-            
-            for(int i = SegmentCount-1; i > 0; --i)
-            {
-                if(segments[i].Tag == "BGM")
-                {
-                    SegmentCount -= i;
-                    break;
-                }
-            }
-
-            int InterchangeControlCount = 1;
-
-            var sg = Helpers.Interchange.GetInterchangeFooter(ControlQuantity,
-                LineCount,
-                SegmentCount+4,
-                MessageReferenceNumber,
-                InterchangeControlCount,
-                this.InterchangeControlReference);
-
-            segments.AddRange(sg);
-            return sg;
+            this.Messages = new List<EDIMessage>();
         }
 
         public void AddInterchangeHeader(string SenderGLN,
             string RecipientGLN,
             DateTime PreparationTime,
-            string InterchangeControlReference,
-            string MessageReferenceNumber,
-            string MessageTypeIdentifier,
-                string MessageTypeVersionNumber,
-                string MessageTypeReleaseNumber,
-                string ControllingAgency,
-                string AssociationAssignedCode)
+            string InterchangeControlReference
+            )
         {
             this.SenderGLN = SenderGLN;
             this.RecipientGLN = RecipientGLN;
             this.PreparationTime = PreparationTime;
             this.InterchangeControlReference = InterchangeControlReference;
-            this.MessageReferenceNumber = MessageReferenceNumber;
-            this.MessageTypeIdentifier = MessageTypeIdentifier;
-            this.MessageTypeVersionNumber = MessageTypeVersionNumber;
-            this.MessageTypeReleaseNumber = MessageTypeReleaseNumber;
-            this.ControllingAgency = ControllingAgency;
-            this.AssociationAssignedCode = AssociationAssignedCode;
+        }
+
+        public void AddMessage(EDIMessage message)
+        {
+#if DEBUG
+            if (!message.GetType().IsSubclassOf(typeof(EDIMessage)))
+                throw new InvalidOperationException("tttt");
+#endif
+            this.Messages.Add(message);
+        }
 
 
-            var sg = Helpers.Interchange.GetInterchangeHeader(SenderGLN,
-            RecipientGLN,
-             PreparationTime,
-            InterchangeControlReference,
-            MessageReferenceNumber,
-            MessageTypeIdentifier,
-            MessageTypeVersionNumber,
-            MessageTypeReleaseNumber,
-            ControllingAgency,
-            AssociationAssignedCode);
 
-            this.AddSegments(sg);
+        public SegmentCollection CreateInterchange()
+        {
+            SegmentCollection interchange = new SegmentCollection();
+            interchange.Add(ServiceStringAdvice ?? Helpers.Interchange.DefaultServiceStringAdvice);
+
+            bool acknowledgementRequest = false;
+            Segment unb = EDIFACT.Helpers.Interchange.GetUNB("UNOC", 3, SenderGLN, "14",
+               RecipientGLN, "14", PreparationTime,
+               InterchangeControlReference,
+               null,
+               null,
+               null,
+               acknowledgementRequest ? 1 : (Nullable<int>)null,
+               null,
+               null);
+            interchange.Add(unb);
+
+            foreach(var message in Messages)
+            {
+                interchange.AddSegments(message.CreateMessage());
+            }
+
+            int InterchangeControlCount = 1;
+
+            var sg = Helpers.Interchange.GetInterchangeFooter(
+                InterchangeControlCount,
+                this.InterchangeControlReference);
+            interchange.AddSegments(sg);
+            return interchange;
+
         }
 
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
-            foreach (var seg in this) sb.AppendLine(seg.ToString());
+            foreach (var seg in CreateInterchange()) sb.AppendLine(seg.ToString());
             return sb.ToString();
         }
     }
+
+
+
 }
